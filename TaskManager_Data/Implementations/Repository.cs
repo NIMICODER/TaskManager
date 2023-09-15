@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManager_Data.Interfaces;
+using TaskManager_Models.Utility;
 
 namespace TaskManager_Data.Implementations
 {
@@ -78,6 +79,122 @@ namespace TaskManager_Data.Implementations
             {
                 throw;
             }
+        }
+
+        public virtual bool Delete(T obj)
+        {
+            try
+            {
+                _dbSet.Remove(obj);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<PaginationResult<T>> GetPagedItems(RequestParameters parameters, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy, Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, bool disableTracking = true)
+        {
+            int MAX_PAGE_SIZE = 50;
+            var skip = (parameters.PageNumber - 1) * parameters.PageSize;
+            var items = await ConstructQuery(predicate, orderBy, skip, parameters.PageSize, include, disableTracking).ToListAsync();
+            return new PaginationResult<T>
+            {
+                PageSize = items.Count,
+                TotalPages = items.Count / MAX_PAGE_SIZE,
+                CurrentPage = parameters.PageNumber,
+                Records = items,
+                TotalRecords = items.Count,
+            };
+        }
+
+        public virtual IQueryable<T> GetQueryable(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, int? skip = null, int? take = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+        {
+            try
+            {
+                IQueryable<T> query = _dbSet;
+                if (predicate != null)
+                    query = _dbSet.Where(predicate);
+
+                if (orderBy != null)
+                {
+                    query = orderBy(query);
+                }
+
+                if (include != null)
+                    query = include(query);
+
+                if (take != null && skip != null)
+                    return query.Skip(skip.Value).Take(take.Value);
+                return query;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private IQueryable<T> ConstructQuery(Expression<Func<T, bool>>? predicate, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy, int? skip, int? take, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include, bool disableTracking)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (disableTracking) query = query.AsNoTracking();
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            if (include != null) query = include(query);
+
+            if (skip != null)
+            {
+                query = query.Skip(skip.Value);
+            }
+
+            if (take != null)
+            {
+                query = query.Take(take.Value);
+            }
+
+            return query;
+        }
+
+        public virtual bool Delete(Expression<Func<T, bool>> predicate)
+        {
+            try
+            {
+                var obj = GetSingleBy(predicate);
+                if (obj != null)
+                {
+                    _dbSet.Remove(obj);
+                    return true;
+                }
+                else
+                    throw new Exception($"object does not exist");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public virtual async Task DeleteAsync(T obj)
+        {
+            Delete(obj);
+            await SaveAsync();
+        }
+
+        public virtual async Task DeleteAsync(Expression<Func<T, bool>> predicate)
+        {
+            Delete(predicate);
+            await SaveAsync();
         }
 
         public virtual T GetSingleBy(Expression<Func<T, bool>> predicate)

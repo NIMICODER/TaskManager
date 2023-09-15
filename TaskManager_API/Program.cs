@@ -1,5 +1,5 @@
-
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using NLog;
 using TaskManager_API.Extensions;
 using TaskManager_API.Middlewares;
@@ -45,6 +45,17 @@ namespace TaskManager_API
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
             TaskManagerDbContext context = serviceProvider.GetRequiredService<TaskManagerDbContext>();
+
+            services.AddControllers(x =>
+            {
+                x.EnableEndpointRouting = false;
+            })
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+            });
+
 
             var app = builder.Build();
 

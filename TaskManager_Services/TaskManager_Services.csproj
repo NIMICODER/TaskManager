@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Domains\Email\Dtos\" />
-    <Folder Include="Domains\ServiceFactory\" />
     <Folder Include="Mapper\" />
     <Folder Include="Task\" />
   </ItemGroup>

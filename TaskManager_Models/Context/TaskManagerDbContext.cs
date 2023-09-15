@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System.Reflection.Emit;
 using TaskManager_Models.Entities.Domains.Auth;
 using TaskManager_Models.Entities.Domains.Notifications;
 using TaskManager_Models.Entities.Domains.Projects;
@@ -23,6 +24,7 @@ namespace TaskManager_Models.Context
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<TaskTodo> Tasks { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<UserTaskAssignment> UserTasks { get; set; }
 
 
 
@@ -33,6 +35,20 @@ namespace TaskManager_Models.Context
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
+
+            //builder.Entity<UserTaskAssignment>()
+            //    .HasKey(uta => new { uta.UserId, uta.TaskId });
+
+            //builder.Entity<UserTaskAssignment>()
+            //    .HasOne(uta => uta.User)
+            //    .WithMany(u => u.AssignedTasks)
+            //    .HasForeignKey(uta => uta.UserId);
+
+            //builder.Entity<UserTaskAssignment>()
+            //    .HasOne(uta => uta.Task)
+            //    .WithMany(t => t.AssignedUsers)
+            //    .HasForeignKey(uta => uta.TaskId);
 
 
             builder.Entity<ApplicationUser>()

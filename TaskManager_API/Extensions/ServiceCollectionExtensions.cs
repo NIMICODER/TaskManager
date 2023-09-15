@@ -12,6 +12,8 @@ using TaskManager_Models.Context;
 using TaskManager_Models.Entities.Domains.User;
 using TaskManager_Services.Domains.Auth;
 using TaskManager_Services.Domains.Email;
+using TaskManager_Services.Domains.ServiceFactory;
+using TaskManager_Services.Domains.Tasks;
 using TaskManager_Services.Utility;
 
 namespace TaskManager_API.Extensions
@@ -23,9 +25,11 @@ namespace TaskManager_API.Extensions
         {
 
             services.AddScoped<IUnitOfWork, UnitOfWork<TaskManagerDbContext>>();
+            services.AddScoped<IServiceFactory, ServiceFactory>();
             services.AddSingleton<ILoggerService, LoggerService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<ITaskService, TaskService>();
         }
 
         public static void RegisterDbContext(this IServiceCollection services, IConfiguration? connectionString)

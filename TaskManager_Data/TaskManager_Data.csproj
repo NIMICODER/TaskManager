@@ -23,4 +23,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TaskManager_Models\TaskManager_Models.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -24,7 +24,6 @@ namespace TaskManager_Models.Context
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<TaskTodo> Tasks { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<UserTaskAssignment> UserTasks { get; set; }
 
 
 
@@ -51,29 +50,29 @@ namespace TaskManager_Models.Context
             //    .HasForeignKey(uta => uta.TaskId);
 
 
-            builder.Entity<ApplicationUser>()
-               .HasMany(u => u.Projects)
-               .WithOne(p => p.User)
-               .HasForeignKey(p => p.UserId)
-               .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<ApplicationUser>()
+            //   .HasMany(u => u.Projects)
+            //   .WithOne(p => p.User)
+            //   .HasForeignKey(p => p.UserId)
+            //   .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Project>()
-                .HasMany(p => p.Tasks)
-                .WithOne(t => t.Project)
-                .HasForeignKey(t => t.ProjectId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<Project>()
+            //    .HasMany(p => p.Tasks)
+            //    .WithOne(t => t.Project)
+            //    .HasForeignKey(t => t.ProjectId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Notification>()
-               .HasOne(n => n.User)
-               .WithMany(u => u.Notifications)
-               .HasForeignKey(n => n.UserId)
-               .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<Notification>()
+            //   .HasOne(n => n.User)
+            //   .WithMany(u => u.Notifications)
+            //   .HasForeignKey(n => n.UserId)
+            //   .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<ApplicationUser>()
-              .HasMany(u => u.Notifications)
-              .WithOne(p => p.User)
-              .HasForeignKey(p => p.UserId)
-              .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<ApplicationUser>()
+            //  .HasMany(u => u.Notifications)
+            //  .WithOne(p => p.User)
+            //  .HasForeignKey(p => p.UserId)
+            //  .OnDelete(DeleteBehavior.Restrict);
 
 
 

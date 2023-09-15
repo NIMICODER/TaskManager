@@ -11,23 +11,24 @@ namespace TaskManager_Models.Entities.Domains.Tasks
         public string Description { get; set; }
         public DateTime DueDate { get; set; }
         public TaskPriority Priority { get; set; }
-        public TaskStatus Status { get; set; }
+        public TasksStatus Status { get; set; }
 
         [ForeignKey("Project")]
-        public Guid ProjectId { get; set; }
+        public Guid? ProjectId { get; set; }
         public virtual Project Project { get; set; }
 
-        //[ForeignKey("UserTaskAssignment")]
-        //public string UserId { get; set; }
+        [ForeignKey("ApplicationUser")]
+        public string UserId { get; set; }
+        public virtual ApplicationUser? User { get; set; }
         //public virtual ICollection<UserTaskAssignment> AssignedUsers { get; set; } = new List<UserTaskAssignment>();
     }
 
     public class UserTaskAssignment
     {
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
 
-        public Guid TaskId { get; set; }
+        public string TaskId { get; set; }
         public virtual TaskTodo Task { get; set; }
     }
 

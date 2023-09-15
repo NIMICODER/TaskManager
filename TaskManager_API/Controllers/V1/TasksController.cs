@@ -46,7 +46,7 @@ namespace TaskManager_API.Controllers.V1
         }
 
         [HttpGet("filter")]
-        public IActionResult GetTasksByStatusOrPriority(TaskStatus? status = null, TaskPriority? priority = null)
+        public IActionResult GetTasksByStatusOrPriority(System.Threading.Tasks.TaskStatus? status = null, TaskPriority? priority = null)
         {
             return Ok("OK");
         }

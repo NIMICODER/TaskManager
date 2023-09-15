@@ -17,6 +17,7 @@ namespace TaskManager_Models.Entities.Domains.User
         public DateTime? UpdatedAt { get; set; }
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
+        public virtual ICollection<TaskTodo> Tasks { get; set; }
        // public virtual ICollection<UserTaskAssignment> AssignedTasks { get; set; } = new List<UserTaskAssignment>();
     }
 }

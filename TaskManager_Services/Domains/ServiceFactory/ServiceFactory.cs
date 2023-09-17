@@ -11,7 +11,7 @@
         public T GetService<T>() where T : class
         {
             if (_serviceProvider.GetService(typeof(T)) is not T service)
-                throw new InvalidOperationException("Type Not Supported");
+                throw new InvalidOperationException($"Type {typeof(T)} is Not Supported");
             return service;
         }
     }

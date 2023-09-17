@@ -20,48 +20,33 @@ namespace TaskManager_API.Controllers.V1
         }
 
 
-        //[HttpPost("{userId}")]
-        //[ProducesResponseType(200, Type = typeof(ApiResponse<ProjectDto>))]
-        //[ProducesResponseType(400, Type = typeof(ApiResponse))]
-        //public async Task<IActionResult> CreateTask([FromRoute] string userId, [FromBody] CreateProjectDto model)
-        //{
-        //    ServiceResponse<ProjectDto> response = await _projectService.CreateProjectAsync(userId, model);
-        //    return ComputeResponse(response);
-        //}
-        [HttpGet]
-        public IActionResult GetProjects()
+        [HttpPost("{userId}")]
+        [ProducesResponseType(200, Type = typeof(ApiResponse<ProjectDto>))]
+        [ProducesResponseType(400, Type = typeof(ApiResponse))]
+        public async Task<IActionResult> CreateProject([FromRoute] string userId, [FromBody] ProjectCreateDto model)
         {
-            return Ok("OK");
+            ServiceResponse<ProjectDto> response = await _projectService.CreateProjectAsync(userId, model);
+            return ComputeResponse(response);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetProject(Guid id)
+        [HttpPut("update/{userId}/{projectId}")]
+        [ProducesResponseType(200, Type = typeof(ApiResponse<ProjectDto>))]
+        [ProducesResponseType(400, Type = typeof(ApiResponse))]
+        public async Task<IActionResult> UpdateProject([FromRoute] string userId, [FromRoute] Guid projectId, [FromBody] ProjectUpdateDto model)
         {
-            return Ok("OK");
+            ServiceResponse<ProjectDto> response = await _projectService.UpdateProjectAsync(projectId, userId,  model);
+            return ComputeResponse(response);
         }
 
-        [HttpPost("{taskId}/assign-to-project/{projectId}")]
-        public IActionResult AssignTaskToProject(Guid taskId, Guid projectId)
+        [HttpDelete("delete/{userId}/{projectId}")]
+        [ProducesResponseType(200, Type = typeof(ApiResponse<ProjectDto>))]
+        [ProducesResponseType(400, Type = typeof(ApiResponse))]
+        public async Task<IActionResult> DeleteProject([FromRoute] string userId, [FromRoute] Guid projectId)
         {
-            return Ok("OK");
+            ServiceResponse<ProjectDto> response = await _projectService.DeleteProjectAsync( projectId, userId);
+            return ComputeResponse(response);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateProject(Guid id, [FromBody] ProjectDto projectDto)
-        {
-            return Ok("OK");
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteProject(Guid id)
-        {
-            return Ok("OK");
-        }
-        [HttpDelete("{taskId}/remove-from-project")]
-        public IActionResult RemoveTaskFromProject(Guid taskId)
-        {
-            return Ok("OK");
-        }
 
 
     }

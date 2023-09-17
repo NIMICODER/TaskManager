@@ -26,7 +26,7 @@ namespace TaskManager_API.Extensions
         {
 
             services.AddScoped<IUnitOfWork, UnitOfWork<TaskManagerDbContext>>();
-            services.AddScoped<IServiceFactory, ServiceFactory>();
+           // services.AddScoped<IServiceFactory, ServiceFactory>();
             services.AddSingleton<ILoggerService, LoggerService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IEmailService, EmailService>();

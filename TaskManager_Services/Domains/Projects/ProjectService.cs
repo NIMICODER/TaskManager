@@ -19,19 +19,16 @@ namespace TaskManager_Services.Domains.Projects
 {
     public class ProjectService : IProjectService
     {
-
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IServiceFactory _serviceFactory;
         private readonly IRepository<Project> _projectRepo;
-        private readonly IMapper _mapper;
+        private readonly IRepository<ApplicationUser> _userRepo;
         private readonly UserManager<ApplicationUser> _userManager;
-        public ProjectService(IServiceFactory serviceFactory, IUnitOfWork unitOfWork)
+        public ProjectService(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
-            _serviceFactory = serviceFactory;
-            _mapper = _serviceFactory.GetService<IMapper>();
-            _userManager = _serviceFactory.GetService<UserManager<ApplicationUser>>();
+            _userManager = userManager;
             _projectRepo = _unitOfWork.GetRepository<Project>();
+            _userRepo = _unitOfWork.GetRepository<ApplicationUser>();
         }
 
 
@@ -40,7 +37,7 @@ namespace TaskManager_Services.Domains.Projects
             throw new NotImplementedException();
         }
 
-        public async Task<ServiceResponse<ProjectDto>> CreateProjectAsync(string userId, ProjectCreateDto reqquest)
+        public async Task<ServiceResponse<ProjectDto>> CreateProjectAsync(string userId, ProjectCreateDto request)
         {
             ApplicationUser? user = await _userManager.FindByIdAsync(userId);
 
@@ -56,8 +53,9 @@ namespace TaskManager_Services.Domains.Projects
 
             var project = new Project
             {
-                Name = reqquest.Name,
-                Description = reqquest.Description
+                Id = request.Id,
+                Name = request.Name,
+                Description = request.Description
             };
 
             user.Projects.Add(project);
@@ -72,7 +70,7 @@ namespace TaskManager_Services.Domains.Projects
             {
                 Data = projectDto,
                 Message = "Project created successfully",
-                StatusCode = HttpStatusCode.Created
+                StatusCode = HttpStatusCode.OK
             };
 
         }

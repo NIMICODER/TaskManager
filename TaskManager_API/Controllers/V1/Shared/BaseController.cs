@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 using TaskManager_Models.Utility;
 using TaskManager_Services.Utility;
 
@@ -107,6 +108,14 @@ namespace TaskManager_API.Controllers.V1.Shared
                     throw new ArgumentOutOfRangeException("HTTP Status Code Could Not Be Deciphered", nameof(serviceResponse.StatusCode));
 
             }
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public string GetUserId()
+        {
+            ClaimsPrincipal user = HttpContext.User;
+            string userId = user.FindFirstValue("UserId")!;
+            return userId;
         }
 
     }

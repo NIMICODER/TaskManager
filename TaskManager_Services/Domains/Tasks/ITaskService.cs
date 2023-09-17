@@ -31,7 +31,7 @@ namespace TaskManager_Services.Domains.Tasks
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<ServiceResponse<TaskDto>> CreateTaskAsync(TaskCreateDto request);
+        //Task<ServiceResponse<TaskDto>> CreateTaskAsync(TaskCreateDto request);
         /// <summary>
         /// Updating task
         /// </summary>
@@ -66,19 +66,12 @@ namespace TaskManager_Services.Domains.Tasks
         /// </summary>
         /// <returns></returns>
         Task<ServiceResponse<PaginationResponse<TaskDto>>> GetTasksDueThisWeekAsync(Guid projectId, RequestParameters requestParameters);
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="taskId"></param>
-        /// <param name="projectId"></param>
-        /// <returns></returns>
-        Task<ServiceResponse<TaskDto>> AssignTaskToUserAsync(string userId, Guid taskId, Guid projectId);
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="taskId"></param>
-        /// <returns></returns>
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="taskId"></param>
+       /// <param name="projectId"></param>
+       /// <returns></returns>
         Task<ServiceResponse<TaskDto>> RemoveTaskFromProjectAsync(Guid taskId, Guid projectId);
         /// <summary>
         /// 

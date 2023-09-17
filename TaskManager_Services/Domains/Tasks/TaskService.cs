@@ -23,76 +23,74 @@ namespace TaskManager_Services.Domains.Tasks
     public class TaskService : ITaskService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IServiceFactory _serviceFactory;
         private readonly IRepository<TaskTodo> _taskRepo;
         private readonly IRepository<Project> _projectRepo;
-        private readonly IMapper _mapper;
+        private readonly IRepository<ApplicationUser> _userRepo;
         private readonly UserManager<ApplicationUser> _userManager;
-        public TaskService(IServiceFactory serviceFactory, IUnitOfWork unitOfWork)
+        public TaskService(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
-            _serviceFactory = serviceFactory;
-            _mapper = _serviceFactory.GetService<IMapper>();
-            _userManager = _serviceFactory.GetService<UserManager<ApplicationUser>>();
+            _userManager = userManager;
             _taskRepo = _unitOfWork.GetRepository<TaskTodo>();
             _projectRepo = _unitOfWork.GetRepository<Project>();
+            _userRepo = _unitOfWork.GetRepository<ApplicationUser>();
         }
 
 
 
 
-        public async Task<ServiceResponse<TaskDto>> CreateTaskAsync(TaskCreateDto request)
-        {
-            bool taskExist = await _taskRepo.AnyAsync(t => t.Description.ToLower() == request.Description.ToLower());
-            if (taskExist)
-            {
-                return new ServiceResponse<TaskDto>
-                {
-                    Message = "Task already exist",
-                    StatusCode = HttpStatusCode.BadRequest
-                };
-            }
-            var newTask = new TaskTodo
-            {
-                Title = request.Title,
-                Description = request.Description,
-                DueDate = request.DueDate,
-                Priority = request.Priority,
-                Status = request.Status
-            };
-            newTask.Status = TasksStatus.Completed;
-            _taskRepo.Add(newTask);
-            int rows = _unitOfWork.SaveChanges();
-            if (rows > 0)
-            {
-                // Mapping the new task to a TaskDto
-                var taskDto = new TaskDto
-                (
-                    newTask.Id, // Assign the new task's ID
-                    newTask.Title,
-                    newTask.Description,
-                    newTask.DueDate,
-                    newTask.Priority,
-                    newTask.Status
-                );
+        //public async Task<ServiceResponse<TaskDto>> CreateTaskAsync(TaskCreateDto request)
+        //{
+        //    bool taskExist = await _taskRepo.AnyAsync(t => t.Description.ToLower() == request.Description.ToLower());
+        //    if (taskExist)
+        //    {
+        //        return new ServiceResponse<TaskDto>
+        //        {
+        //            Message = "Task already exist",
+        //            StatusCode = HttpStatusCode.BadRequest
+        //        };
+        //    }
+        //    var newTask = new TaskTodo
+        //    {
+        //        Title = request.Title,
+        //        Description = request.Description,
+        //        DueDate = request.DueDate,
+        //        Priority = request.Priority,
+        //        Status = request.Status
+        //    };
+        //    newTask.Status = TasksStatus.Completed;
+        //    _taskRepo.Add(newTask);
+        //    int rows = _unitOfWork.SaveChanges();
+        //    if (rows > 0)
+        //    {
+        //        // Mapping the new task to a TaskDto
+        //        var taskDto = new TaskDto
+        //        (
+        //            newTask.Id, // Assign the new task's ID
+        //            newTask.Title,
+        //            newTask.Description,
+        //            newTask.DueDate,
+        //            newTask.Priority,
+        //            newTask.Status
+        //        );
 
-                return new ServiceResponse<TaskDto>
-                {
-                    Data = taskDto,
-                    Message = "Task created successfully",
-                    StatusCode = HttpStatusCode.Created // Changed the status code to Created
-                };
-            }
-            else
-            {
-                return new ServiceResponse<TaskDto>
-                {
-                    Message = "Something went wrong while creating the task",
-                    StatusCode = HttpStatusCode.InternalServerError // Changed the status code to InternalServerError
-                };
-            }
+        //        return new ServiceResponse<TaskDto>
+        //        {
+        //            Data = taskDto,
+        //            Message = "Task created successfully",
+        //            StatusCode = HttpStatusCode.Created // Changed the status code to Created
+        //        };
+        //    }
+        //    else
+        //    {
+        //        return new ServiceResponse<TaskDto>
+        //        {
+        //            Message = "Something went wrong while creating the task",
+        //            StatusCode = HttpStatusCode.InternalServerError // Changed the status code to InternalServerError
+        //        };
+        //    }
 
-        }
+        //}
 
         public async Task<ServiceResponse<TaskDto>> CreateTaskAsync(Guid projectId, TaskCreateDto request)
         {
@@ -117,7 +115,7 @@ namespace TaskManager_Services.Domains.Tasks
                 Status = request.Status,
             };
 
-            newTask.ProjectId = projectId;
+            newTask.ProjectId = project.Id;
             _taskRepo.Add( newTask );   
             int rows = await _unitOfWork.SaveChangesAsync();
             
@@ -137,7 +135,7 @@ namespace TaskManager_Services.Domains.Tasks
                 {
                     Data = createdTaskDto,
                     Message = "Task created successfully",
-                    StatusCode = HttpStatusCode.Created
+                    StatusCode = HttpStatusCode.OK
                 };
             }
             {
@@ -174,7 +172,7 @@ namespace TaskManager_Services.Domains.Tasks
                     StatusCode = HttpStatusCode.NotFound
                 };
             }
-            TaskTodo taskToDelete = await _taskRepo.GetSingleByAsync(t => t.Id == taskId && t.Id == projectId);
+            TaskTodo taskToDelete = await _taskRepo.GetSingleByAsync(t => t.Id == taskId && t.ProjectId == projectId);
 
             if (taskToDelete == null)
             {
@@ -195,7 +193,7 @@ namespace TaskManager_Services.Domains.Tasks
                 {
                     Data = null,
                     Message = "Task deleted successfully",
-                    StatusCode = HttpStatusCode.OK
+                    StatusCode = HttpStatusCode.NoContent
                 };
             }
             else
@@ -357,7 +355,6 @@ namespace TaskManager_Services.Domains.Tasks
                 };
             }
 
-            // Check if the user exists
             ApplicationUser user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
@@ -370,11 +367,9 @@ namespace TaskManager_Services.Domains.Tasks
                 };
             }
 
-            // Toggle the task status
             task.Status = status;
 
-            // Update the task in the repository
-            _taskRepo.Update(task);
+            await _taskRepo.UpdateAsync(task);
             int rows = await _unitOfWork.SaveChangesAsync();
 
             if (rows > 0)
@@ -524,70 +519,6 @@ namespace TaskManager_Services.Domains.Tasks
                 {
                     Data = null,
                     Message = "Something went wrong",
-                    StatusCode = HttpStatusCode.InternalServerError
-                };
-            }
-        }
-
-        public async Task<ServiceResponse<TaskDto>> AssignTaskToUserAsync(string userId, Guid taskId, Guid projectId)
-        {
-
-
-            TaskTodo task = await _taskRepo.GetSingleByAsync(t => t.UserId == userId && t.Id == projectId);
-
-            if (task == null)
-            {
-                return new ServiceResponse<TaskDto>
-                {
-                    Data = null,
-                    Message = "Task not found",
-                    StatusCode = HttpStatusCode.NotFound
-                };
-            }
-
-            ApplicationUser? user = await _userManager.FindByIdAsync(userId);
-
-            if (user == null)
-            {
-                return new ServiceResponse<TaskDto>
-                {
-                    Data = null,
-                    Message = "User not found",
-                    StatusCode = HttpStatusCode.NotFound
-                };
-            }
-
-            task.UserId = userId;
-            task.ProjectId = projectId;
-
-            _taskRepo.Update(task);
-            int rows = await _unitOfWork.SaveChangesAsync();
-
-            if (rows > 0)
-            {
-                var taskDto = new TaskDto
-                (
-                    task.Id,
-                    task.Title,
-                    task.Description,
-                    task.DueDate,
-                    task.Priority,
-                    task.Status
-                );
-
-                return new ServiceResponse<TaskDto>
-                {
-                    Data = taskDto,
-                    Message = "Task assigned to user successfully",
-                    StatusCode = HttpStatusCode.OK
-                };
-            }
-            else
-            {
-                return new ServiceResponse<TaskDto>
-                {
-                    Data = null,
-                    Message = "Something went wrong ",
                     StatusCode = HttpStatusCode.InternalServerError
                 };
             }

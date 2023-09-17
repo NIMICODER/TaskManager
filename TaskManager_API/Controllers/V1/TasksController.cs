@@ -22,56 +22,91 @@ namespace TaskManager_API.Controllers.V1
         }
 
 
-        [HttpGet]
-        public IActionResult GetTasks()
-        {
-            return Ok("OK");
-        }
-
+        
         [HttpGet("{taskId}")]
         [SwaggerOperation(Summary = "Gets taskitem with id")]
         [ProducesResponseType(200, Type = typeof(ApiRecordResponse<TaskDto>))]
         [ProducesResponseType(404, Type = typeof(ApiResponse))]
         [ProducesResponseType(400, Type = typeof(ApiResponse))]
-        public async Task<IActionResult> GetTask(Guid id)
+        public async Task<IActionResult> GetTask(Guid taskId)
         {
-            var response = await _taskService.GetTaskAsync(id);
+            var response = await _taskService.GetTaskAsync(taskId);
             return ComputeResponse(response);
         }
 
-        [HttpGet("due-this-week")]
-        public IActionResult GetTasksDueThisWeek()
-        {
-            return Ok("OK");
-        }
+        //[HttpPost("create-task")]
+        //[ProducesResponseType(200, Type = typeof(ApiRecordResponse<TaskDto>))]
+        //[ProducesResponseType(404, Type = typeof(ApiResponse))]
+        //[ProducesResponseType(400, Type = typeof(ApiResponse))]
+        //public async Task<IActionResult> CreateTask([FromBody] TaskCreateDto model)
+        //{
+        //   var response = await _taskService.CreateTaskAsync(model);
+        //    return ComputeResponse(response);
+        //}
 
-        [HttpGet("filter")]
-        public IActionResult GetTasksByStatusOrPriority(System.Threading.Tasks.TaskStatus? status = null, TaskPriority? priority = null)
-        {
-            return Ok("OK");
-        }
-
-
-        [HttpPost("create-task")]
-        [ProducesResponseType(200, Type = typeof(ApiRecordResponse<TaskDto>))]
-        [ProducesResponseType(404, Type = typeof(ApiResponse))]
+        [HttpPost]
+        [ProducesResponseType(200, Type = typeof(ApiResponse<TaskDto>))]
         [ProducesResponseType(400, Type = typeof(ApiResponse))]
-        public async Task<IActionResult> CreateTask([FromBody] TaskCreateDto model)
+        public async Task<IActionResult> CreateTask([FromBody] TaskCreateDto model, Guid projectId)
         {
-           var response = await _taskService.CreateTaskAsync(model);
+            ServiceResponse<TaskDto> response = await _taskService.CreateTaskAsync(projectId, model);
             return ComputeResponse(response);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateTask(Guid id, [FromBody] TaskDto taskDto)
+
+        [HttpPut("update/{projectId}/{taskId}")]
+        [ProducesResponseType(200, Type = typeof(ApiResponse<TaskDto>))]
+        [ProducesResponseType(400, Type = typeof(ApiResponse))]
+        public async Task<IActionResult> UpdateTask([FromRoute] Guid projectId, [FromRoute] Guid taskId, [FromBody] TaskUpdateDto model)
         {
-            return Ok("OK");
+            ServiceResponse<TaskDto> response = await _taskService.UpdateTaskAsync(taskId, projectId, model);
+            return ComputeResponse(response);
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteTask(Guid id)
+        [HttpPut("{projectId}/assign")]
+        [ProducesResponseType(200, Type = typeof(ApiResponse<TaskDto>))]
+        [ProducesResponseType(400, Type = typeof(ApiResponse))]
+        public async Task<IActionResult> AssignTaskToProject([FromRoute] Guid taskId, [FromRoute] Guid projectId)
         {
-            return Ok("OK");
+            ServiceResponse<TaskDto> response = await _taskService.AssignTaskToProjectAsync(taskId, projectId);    
+            return ComputeResponse(response);
         }
+        [HttpPut("{projectId}/assign/{taskId}")]
+        [ProducesResponseType(200, Type = typeof(ApiResponse<TaskDto>))]
+        [ProducesResponseType(400, Type = typeof(ApiResponse))]
+        public async Task<IActionResult> RemoveTaskFromAProject( [FromRoute] Guid taskId, [FromRoute] Guid projectId)
+        {
+            ServiceResponse<TaskDto> response = await _taskService.RemoveTaskFromProjectAsync(taskId, projectId);   
+            return ComputeResponse(response);
+        }
+
+        [HttpGet("due/{projectId}")]
+        [ProducesResponseType(200, Type = typeof(ApiRecordResponse<PaginationResponse<TaskDto>>))]
+        [ProducesResponseType(400, Type = typeof(ApiResponse))]
+        public async Task<IActionResult> GetTasksByDueDateForTheWeek([FromRoute] Guid projectId, [FromQuery] RequestParameters requestParameters)
+        {
+            ServiceResponse<PaginationResponse<TaskDto>> response = await _taskService.GetTasksDueThisWeekAsync(projectId, requestParameters);  
+            return ComputeResponse(response);
+        }
+
+        [HttpPut("status/{taskId}/{userId}/{status}")]
+        [ProducesResponseType(200, Type = typeof(ApiResponse<TaskDto>))]
+        [ProducesResponseType(400, Type = typeof(ApiResponse))]
+        public async Task<IActionResult> ChangeTaskStatus([FromRoute] Guid taskId, [FromRoute] string userId, [FromRoute] TasksStatus status)
+        {
+            ServiceResponse<TaskDto> response = await _taskService.ToggleTaskStatusAsync(taskId, userId, status);
+            return ComputeResponse(response);
+        }
+
+        [HttpDelete("delete/{taskId}/{projectId}")]
+        
+        [ProducesResponseType(200, Type = typeof(ApiResponse<TaskDto>))]
+        [ProducesResponseType(400, Type = typeof(ApiResponse))]
+        public async Task<IActionResult> DeleteTask( [FromRoute] Guid taskId, [FromRoute] Guid projectId)
+        {
+            ServiceResponse<TaskDto> response = await _taskService.DeleteTaskAsync(taskId, projectId);
+            return ComputeResponse(response);
+        }
+
     }
 }

@@ -18,7 +18,7 @@ namespace TaskManager_Models.Entities.Domains.Tasks
         public virtual Project Project { get; set; }
 
         [ForeignKey("ApplicationUser")]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public virtual ApplicationUser? User { get; set; }
         //public virtual ICollection<UserTaskAssignment> AssignedUsers { get; set; } = new List<UserTaskAssignment>();
     }

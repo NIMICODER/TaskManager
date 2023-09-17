@@ -23,10 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TaskManager_Cache\TaskManager_Cache.csproj" />
     <ProjectReference Include="..\TaskManager_Logging\TaskManager_Logging.csproj" />
     <ProjectReference Include="..\TaskManager_Migrations\TaskManager_Migrations.csproj" />

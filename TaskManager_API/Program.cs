@@ -3,6 +3,7 @@ using Newtonsoft.Json.Converters;
 using NLog;
 using TaskManager_API.Extensions;
 using TaskManager_API.Middlewares;
+using TaskManager_Cache.Extensions;
 using TaskManager_Models.Context;
 using TaskManager_Services.Utility;
 
@@ -17,6 +18,10 @@ namespace TaskManager_API
             IServiceCollection services = builder.Services;
 
             TaskManagerApiConfig managerApiConfig = configuration.Get<TaskManagerApiConfig>()!;
+
+            //TaskManagerApiConfig managerApiConfigB = builder.Services.BindConfigu
+
+            services.AddRedisCache(managerApiConfig.Redis);
 
             services.AddSingleton(managerApiConfig);
             JwtConfig jwtConfig = managerApiConfig.JwtConfig;
@@ -39,7 +44,7 @@ namespace TaskManager_API
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            //builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen();
             builder.Services.ConfigureSwagger();
 
 
@@ -72,6 +77,8 @@ namespace TaskManager_API
 
             app.UseAuthorization();
 
+           // app.UseStaticFiles();
+            app.UseRouting();
 
             app.MapControllers();
 

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TaskManager_Cache\TaskManager_Cache.csproj" />
     <ProjectReference Include="..\TaskManager_Data\TaskManager_Data.csproj" />
     <ProjectReference Include="..\TaskManager_Models\TaskManager_Models.csproj" />
   </ItemGroup>

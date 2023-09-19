@@ -27,6 +27,10 @@ namespace TaskManager_Data.Interfaces
 
         Task DeleteAsync(T obj);
 
+        IEnumerable<T> GetAll(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, params string[] includeProperties);
+
+        Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
+
         int Save();
 
         Task<int> SaveAsync();

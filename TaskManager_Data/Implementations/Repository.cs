@@ -197,6 +197,32 @@ namespace TaskManager_Data.Implementations
             await SaveAsync();
         }
 
+
+        public virtual IEnumerable<T> GetAll(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, params string[] includeProperties)
+        {
+            try
+            {
+                return _dbSet.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public virtual async Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+        {
+            try
+            {
+                IQueryable<T> query = ConstructQuery(orderBy, include);
+                return await query.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public virtual T GetSingleBy(Expression<Func<T, bool>> predicate)
         {
             return _dbSet.FirstOrDefault(predicate);
@@ -253,6 +279,20 @@ namespace TaskManager_Data.Implementations
             Update(obj);
             await SaveAsync();
             return obj;
+        }
+
+        private IQueryable<T> ConstructQuery(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, Func<IQueryable<T>, IIncludableQueryable<T, object>> include)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            if (include != null) query = include(query);
+
+            return query;
         }
 
 

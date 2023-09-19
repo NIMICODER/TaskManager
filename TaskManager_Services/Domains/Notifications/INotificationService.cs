@@ -11,45 +11,12 @@ namespace TaskManager_Services.Domains.Notifications
     public interface INotificationService
     {
         /// <summary>
-        /// 
+        /// Sends out otp emails to users
         /// </summary>
-        /// <param name="notificationId"></param>
+        /// <param name="model"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<ServiceResponse<NotificationDto>> GetNotificationAsync(Guid notificationId);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        Task<ServiceResponse<IEnumerable<NotificationDto>>> GetNotificationsAsync();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="notificationDto"></param>
-        /// <returns></returns>
-        Task<ServiceResponse<NotificationDto>> CreateNotificationAsync(NotificationCreateDto notificationDto);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="notificationId"></param>
-        /// <returns></returns>
-        Task<bool> MarkNotificationAsReadAsync(Guid notificationId);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="notificationId"></param>
-        /// <returns></returns>
-        Task<bool> MarkNotificationAsUnreadAsync(Guid notificationId);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="notificationId"></param>
-        /// <returns></returns>
-        Task<bool> DeleteNotificationAsync(Guid notificationId);
+        Task CreateOtpNotificationAsync(CreateOtpNotificationDto model, CancellationToken cancellationToken);
 
         /// <summary>
         /// 

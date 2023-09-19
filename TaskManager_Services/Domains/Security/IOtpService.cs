@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TaskManager_Models.Entities.Domains.Security;
+using TaskManager_Models.Entities.Enums;
 
 namespace TaskManager_Services.Domains.Security
 {
@@ -19,7 +19,7 @@ namespace TaskManager_Services.Domains.Security
         /// <param name="otp">The otp code entered by the user</param>
         /// <param name="operation">The operation for which we are attempting to validate via 2FA</param>
         /// <returns></returns>
-        Task<string> GenerateOtpAsync(string userId, OtpOperation operation);
+        Task<string> GenerateOtpAsync(string userId, NotificationType operation);
 
         /// <summary>
         /// Verifies the validity of the generated OTP code
@@ -28,6 +28,6 @@ namespace TaskManager_Services.Domains.Security
         /// <param name="otp">The otp code entered by the user</param>
         /// <param name="operation">The operation for which we are attempting to validate via 2FA</param>
         /// <returns></returns>
-        Task<bool> VerifyOtpAsync(string userId, string otp, OtpOperation operation);
+        Task<bool> VerifyOtpAsync(string userId, string otp, NotificationType operation);
     }
 }

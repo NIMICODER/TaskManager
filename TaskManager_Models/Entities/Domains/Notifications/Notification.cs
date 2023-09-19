@@ -10,10 +10,11 @@ namespace TaskManager_Models.Entities.Domains.Notifications
         public NotificationType Type { get; set; }
         public string Message { get; set; }
         public DateTime Timestamp { get; set; }
+        public bool IsRead { get; set; }
 
-        //[ForeignKey("Task")]
-        //public Guid? TaskId { get; set; }
-        //public virtual TaskTodo Task { get; set; }
+        [ForeignKey("TaskTodo")]
+        public Guid? TaskId { get; set; }
+        public virtual TaskTodo Task { get; set; }
 
         [ForeignKey("User")]
         public string? UserId { get; set; }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManager_Cache.Interfaces;
-using TaskManager_Models.Entities.Domains.Security;
+using TaskManager_Models.Entities.Enums;
 using TaskManager_Services.Domains.Security.Dtos;
 
 namespace TaskManager_Services.Domains.Security
@@ -19,7 +19,7 @@ namespace TaskManager_Services.Domains.Security
             _cacheService = cacheService;
         }
 
-        public async Task<string> GenerateOtpAsync(string userId, OtpOperation operation)
+        public async Task<string> GenerateOtpAsync(string userId, NotificationType operation)
         {
             string cacheKey = CacheKeySelector.OtpCodeCacheKey(userId, operation);
             OtpCodeDto? otpCode = await _cacheService.ReadFromCache<OtpCodeDto>(cacheKey);
@@ -35,7 +35,7 @@ namespace TaskManager_Services.Domains.Security
             return otpCode.Otp;
         }
 
-        public async Task<bool> VerifyOtpAsync(string userId, string otp, OtpOperation operation)
+        public async Task<bool> VerifyOtpAsync(string userId, string otp, NotificationType operation)
         {
             string cacheKey = CacheKeySelector.OtpCodeCacheKey(userId, operation);
             OtpCodeDto? otpCode = await _cacheService.ReadFromCache<OtpCodeDto>(cacheKey);

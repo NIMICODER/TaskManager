@@ -106,6 +106,9 @@ namespace TaskManager_Services.Domains.Auth
 
                 //var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
+
+
+
                 return new ServiceResponse<string>()
                 {
                     StatusCode = HttpStatusCode.OK,

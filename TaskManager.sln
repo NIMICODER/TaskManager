@@ -17,7 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager_Models", "TaskM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager_Services", "TaskManager_Services\TaskManager_Services.csproj", "{2FC9E168-4E69-4853-96F9-1D50DB2C8D1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager_AsyncClient", "TaskManager_AsyncClient\TaskManager_AsyncClient.csproj", "{BCC3AB42-AD7E-4ADF-8C23-02C22B57E38E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager_AsyncClient", "TaskManager_AsyncClient\TaskManager_AsyncClient.csproj", "{BCC3AB42-AD7E-4ADF-8C23-02C22B57E38E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{8C3D9C8C-D613-4083-8C52-83467010B3F1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager_Worker", "TaskManager_Worker\TaskManager_Worker.csproj", "{AB1D1B80-F9AA-4FF5-903F-ED4D6BCEC1BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager_MessageContracts", "TaskManager_MessageContracts\TaskManager_MessageContracts.csproj", "{92193601-7270-4E2D-BB70-81678EF18E73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +63,14 @@ Global
 		{BCC3AB42-AD7E-4ADF-8C23-02C22B57E38E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCC3AB42-AD7E-4ADF-8C23-02C22B57E38E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCC3AB42-AD7E-4ADF-8C23-02C22B57E38E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB1D1B80-F9AA-4FF5-903F-ED4D6BCEC1BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB1D1B80-F9AA-4FF5-903F-ED4D6BCEC1BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB1D1B80-F9AA-4FF5-903F-ED4D6BCEC1BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB1D1B80-F9AA-4FF5-903F-ED4D6BCEC1BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92193601-7270-4E2D-BB70-81678EF18E73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92193601-7270-4E2D-BB70-81678EF18E73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92193601-7270-4E2D-BB70-81678EF18E73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92193601-7270-4E2D-BB70-81678EF18E73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
